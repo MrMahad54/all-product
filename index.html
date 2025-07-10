@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shopping List with jQuery</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #007BFF;
+      color: white;
+    }
+    #result {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Shopping Program with jQuery</h2>
+
+<button id="startBtn">Start Shopping</button>
+
+<div id="result"></div>
+
+<script>
+$(document).ready(function () {
+  const exampleProducts = ['jeans', 'jacket', 'shirts', 'sneakers', 'watch', 'sun glasses'];
+
+  $('#startBtn').click(function () {
+    const numberOfItems = parseInt(prompt('How many items do you want to purchase?'));
+    if (isNaN(numberOfItems) || numberOfItems <= 0) {
+      alert('Please enter a valid number.');
+      return;
+    }
+
+    const products = [];
+    
+    function askForItem(i) {
+      if (i >= numberOfItems) {
+        // Show results
+        let totalPrice = 0;
+        let html = '<table><thead><tr><th>Item Name</th><th>Price ($)</th></tr></thead><tbody>';
+        products.forEach(p => {
+          html += `<tr><td>${p.name}</td><td>${p.price.toFixed(2)}</td></tr>`;
+          totalPrice += p.price;
+        });
+        html += `<tr><th>Total</th><th>$${totalPrice.toFixed(2)}</th></tr>`;
+        html += '</tbody></table>';
+        $('#result').html(html);
+        return;
+      }
+
+      // Ask for item name
+      let name = prompt(`Enter name of item ${i + 1} (e.g. jeans, jacket, shirts, sneakers, watch, sun glasses):`);
+      if (!name) {
+        alert('Item name cannot be empty.');
+        askForItem(i);
+        return;
+      }
+
+      // Optional: validate if name is in exampleProducts, or just accept any name
+
+      // Ask for price
+      let priceStr = prompt(`Enter price for ${name}:`);
+      let price = parseFloat(priceStr);
+      if (isNaN(price) || price < 0) {
+        alert('Please enter a valid price.');
+        askForItem(i);
+        return;
+      }
+
+      products.push({ name, price });
+      askForItem(i + 1);
+    }
+
+    askForItem(0);
+  });
+});
+</script>
+
+</body>
+</html>
